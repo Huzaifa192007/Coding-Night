@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCoach AI — Daily Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f3f0;
+            color: #1a1a1a;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #1b1b1b;
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .brand {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .navbar .brand span {
+            color: #1e7b5a;
+        }
+
+        .navbar .brand i {
+            color: #c9a86c;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-right i {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e7b5a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .nav-right a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* ===== HEADER ===== */
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: #6b6b6b;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 4px;
+            background: #c9a86c;
+            border-radius: 10px;
+            margin: 12px 0 30px 0;
+        }
+
+        /* ===== TRACKER GRID ===== */
+        .tracker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* ===== WATER ===== */
+        .water-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+        }
+
+        .water-card h3 {
+            font-weight: 600;
+        }
+
+        .water-card h3 i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .water-card .big-number {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin: 6px 0 14px;
+        }
+
+        .water-icons {
+            display: flex;
+            gap: 12px;
+            font-size: 2rem;
+            color: #cbd5e1;
+            margin: 12px 0 16px;
+            flex-wrap: wrap;
+        }
+
+        .water-icons .filled {
+            color: #1e7b5a;
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            border: 2px solid #1e7b5a;
+            color: #1e7b5a;
+            padding: 6px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-outline-sm:hover {
+            background: #1e7b5a;
+            color: #fff;
+        }
+
+        /* ===== MEALS ===== */
+        .meals-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .meals-card h3 {
+            font-weight: 600;
+        }
+
+        .meals-card h3 i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .meals-card .meal-status {
+            font-size: 1.1rem;
+            margin: 10px 0 6px;
+        }
+
+        .meals-card .meal-status .done {
+            color: #1e7b5a;
+        }
+
+        .meals-card .meal-status .pending {
+            color: #ccc;
+        }
+
+        .meals-card .progress-text {
+            font-weight: 600;
+        }
+
+        /* ===== WORKOUT TRACKER ===== */
+        .workout-tracker {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+        }
+
+        .workout-tracker h3 {
+            font-weight: 600;
+        }
+
+        .workout-tracker h3 i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .workout-tracker .workout-name {
+            font-weight: 500;
+            margin: 6px 0 2px;
+        }
+
+        .workout-tracker .workout-meta {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .workout-tracker .status-badge {
+            background: #1e7b5a;
+            color: #fff;
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin: 8px 0 12px;
+        }
+
+        /* ===== HABITS ===== */
+        .habits-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-top: 24px;
+        }
+
+        .habits-card h3 {
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .habit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+            font-size: 1rem;
+        }
+
+        .habit-item .done {
+            color: #1e7b5a;
+            font-size: 1.2rem;
+        }
+
+        .habit-item .pending {
+            color: #ccc;
+            font-size: 1.2rem;
+        }
+
+        .habit-progress {
+            margin-top: 12px;
+        }
+
+        .habit-progress .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar {
+            height: 6px;
+            background: #ece8e3;
+            border-radius: 60px;
+            margin-top: 4px;
+        }
+
+        .bar .fill {
+            height: 100%;
+            background: #c9a86c;
+            border-radius: 60px;
+            width: 80%;
+        }
+
+        /* ===== STREAK ===== */
+        .streak-card {
+            background: #1b1b1b;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-top: 24px;
+        }
+
+        .streak-card h3 {
+            color: #c9a86c;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .streak-card p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 4px 0 14px;
+        }
+
+        .streak-days {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .streak-days .day {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .streak-days .day.done {
+            background: #1e7b5a;
+            color: #fff;
+        }
+
+        .streak-days .day.today {
+            border: 2px solid #c9a86c;
+            color: #c9a86c;
+            background: transparent;
+        }
+
+        /* ===== NEXT PAGE LINK ===== */
+        .next-link {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0ddd8;
+        }
+
+        .next-link a {
+            color: #1e7b5a;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .next-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:1024px) {
+            .tracker-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:768px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                order: 3;
+            }
+
+            .nav-links a {
+                padding: 4px 12px;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .water-card .big-number {
+                font-size: 2rem;
+            }
+
+            .water-icons {
+                font-size: 1.6rem;
+                gap: 8px;
+            }
+        }
+
+        @media(max-width:480px) {
+            .water-icons {
+                font-size: 1.4rem;
+            }
+
+            .streak-days .day {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="brand"><i class="fas fa-diamond"></i>FitCoach <span>AI</span></div>
+        <ul class="nav-links">
+            <li><a href="./dashboard.html"><i class="fas fa-grid-2"></i> Dashboard</a></li>
+            <li><a href="./Fitness.html"><i class="fas fa-clipboard-pulse"></i> Assessment</a></li>
+            <li><a href="./Workout.html"><i class="fas fa-dumbbell"></i> Workout & Diet</a></li>
+            <li><a href="#" class="active"><i class="fas fa-droplet"></i> Daily Tracker</a></li>
+            <li><a href="./Progress Coach.html"><i class="fas fa-chart-line"></i> Progress & AI</a></li>
+        </ul>
+        <div class="nav-right">
+            <i class="fas fa-bell"></i>
+            <div class="avatar">A</div>
+            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </nav>
+
+    <!-- ===== CONTENT ===== -->
+    <div class="container">
+
+        <div class="header">
+            <h1>Today's Tracker</h1>
+            <p>Small habits create lasting results.</p>
+            <div class="gold-line"></div>
+        </div>
+
+        <div class="tracker-grid">
+
+            <!-- LEFT COLUMN -->
+            <div>
+
+                <!-- WATER -->
+                <div class="water-card">
+                    <h3><i class="fas fa-droplet"></i> Water Intake</h3>
+                    <div class="big-number">5 / 8 Glasses</div>
+                    <div class="water-icons">
+                        <i class="fas fa-droplet filled"></i>
+                        <i class="fas fa-droplet filled"></i>
+                        <i class="fas fa-droplet filled"></i>
+                        <i class="fas fa-droplet filled"></i>
+                        <i class="fas fa-droplet filled"></i>
+                        <i class="fas fa-droplet"></i>
+                        <i class="fas fa-droplet"></i>
+                        <i class="fas fa-droplet"></i>
+                    </div>
+                    <a href="#" class="btn-outline-sm"><i class="fas fa-plus"></i> Add Water</a>
+                </div>
+
+                <!-- MEALS -->
+                <div class="meals-card">
+                    <h3><i class="fas fa-utensils"></i> Meals</h3>
+                    <div class="meal-status">
+                        <span class="done"><i class="fas fa-check-circle"></i> Breakfast</span> &nbsp;
+                        <span class="done"><i class="fas fa-check-circle"></i> Lunch</span> &nbsp;
+                        <span class="pending"><i class="fas fa-circle"></i> Dinner</span>
+                    </div>
+                    <div class="progress-text">2 / 3 Meals Completed</div>
+                </div>
+
+                <!-- WORKOUT TRACKER -->
+                <div class="workout-tracker">
+                    <h3><i class="fas fa-dumbbell"></i> Today's Workout</h3>
+                    <div class="workout-name">Full Body Workout</div>
+                    <div class="workout-meta">30 Minutes</div>
+                    <div class="status-badge"><i class="fas fa-check"></i> Completed</div>
+                    <a href="#" class="btn-outline-sm">Mark Complete</a>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div>
+
+                <!-- HABITS -->
+                <div class="habits-card">
+                    <h3><i class="fas fa-check-double"></i> Habit Checklist</h3>
+                    <div class="habit-item"><span class="done"><i class="fas fa-check-circle"></i></span> Drink Water
+                    </div>
+                    <div class="habit-item"><span class="done"><i class="fas fa-check-circle"></i></span> Complete
+                        Workout</div>
+                    <div class="habit-item"><span class="done"><i class="fas fa-check-circle"></i></span> Eat Healthy
+                    </div>
+                    <div class="habit-item"><span class="pending"><i class="fas fa-circle"></i></span> Walk</div>
+                    <div class="habit-item"><span class="done"><i class="fas fa-check-circle"></i></span> Sleep On Time
+                    </div>
+                    <div class="habit-progress">
+                        <div class="row"><span>4 / 5 Habits Completed</span><span>80%</span></div>
+                        <div class="bar">
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STREAK -->
+                <div class="streak-card">
+                    <h3><i class="fas fa-fire"></i> 7 Day Streak</h3>
+                    <p>Consistency is your superpower.</p>
+                    <div class="streak-days">
+                        <span class="day done">M</span>
+                        <span class="day done">T</span>
+                        <span class="day done">W</span>
+                        <span class="day done">T</span>
+                        <span class="day done">F</span>
+                        <span class="day done">S</span>
+                        <span class="day today">S</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- NEXT PAGE LINK -->
+        <div class="next-link">
+            <a href="./Progress Coach.html
+            ">
+                Next: Progress & AI Coach <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

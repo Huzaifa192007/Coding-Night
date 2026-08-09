@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCoach AI — Fitness Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f3f0;
+            color: #1a1a1a;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #1b1b1b;
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .brand {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .navbar .brand span {
+            color: #1e7b5a;
+        }
+
+        .navbar .brand i {
+            color: #c9a86c;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-right i {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e7b5a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .nav-right a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* ===== HEADER ===== */
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: #6b6b6b;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 4px;
+            background: #c9a86c;
+            border-radius: 10px;
+            margin: 12px 0 30px 0;
+        }
+
+        /* ===== GOAL CARDS ===== */
+        .goal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .goal-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 24px 20px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .goal-card.selected {
+            border-color: #c9a86c;
+            box-shadow: 0 0 0 3px rgba(201, 168, 108, 0.2);
+        }
+
+        .goal-card .icon {
+            font-size: 2.8rem;
+            color: #1e7b5a;
+            margin-bottom: 10px;
+        }
+
+        .goal-card h4 {
+            font-weight: 600;
+        }
+
+        .goal-card p {
+            font-size: 0.9rem;
+            color: #6b6b6b;
+            margin: 6px 0 12px;
+        }
+
+        .goal-card .badge {
+            background: #1b1b1b;
+            color: #c9a86c;
+            padding: 2px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .goal-card .badge-light {
+            background: #eee;
+            color: #555;
+            padding: 2px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        /* ===== CALCULATORS ===== */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        .calc-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 30px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+        }
+
+        .calc-card h3 {
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #3a3a3a;
+            margin-bottom: 4px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0ddd8;
+            border-radius: 18px;
+            font-size: 1rem;
+            background: #fafaf8;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e7b5a;
+            box-shadow: 0 0 0 4px rgba(30, 123, 90, 0.10);
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .btn-emerald {
+            background: #1e7b5a;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-emerald:hover {
+            background: #2a9d7c;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        .result-row .bold {
+            font-weight: 700;
+        }
+
+        .result-row .emerald {
+            color: #1e7b5a;
+        }
+
+        .bar {
+            height: 6px;
+            background: #ece8e3;
+            border-radius: 60px;
+            margin-top: 6px;
+        }
+
+        .bar .fill {
+            height: 100%;
+            background: #c9a86c;
+            border-radius: 60px;
+            width: 55%;
+        }
+
+        /* ===== NEXT PAGE LINK ===== */
+        .next-link {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0ddd8;
+        }
+
+        .next-link a {
+            color: #1e7b5a;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .next-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:1024px) {
+            .goal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:768px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                order: 3;
+            }
+
+            .nav-links a {
+                padding: 4px 12px;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .form-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:480px) {
+            .goal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="brand"><i class="fas fa-diamond"></i>FitCoach <span>AI</span></div>
+        <ul class="nav-links">
+            <li><a href="./dashboard.html"><i class="fas fa-grid-2"></i> Dashboard</a></li>
+            <li><a href="#" class="active"><i class="fas fa-clipboard-pulse"></i> Assessment</a></li>
+            <li><a href="./Workout.html"><i class="fas fa-dumbbell"></i> Workout & Diet</a></li>
+            <li><a href="./Daily Tracker.html"><i class="fas fa-droplet"></i> Daily Tracker</a></li>
+            <li><a href="progress.html"><i class="fas fa-chart-line"></i> Progress & AI</a></li>
+        </ul>
+        <div class="nav-right">
+            <i class="fas fa-bell"></i>
+            <div class="avatar">A</div>
+            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </nav>
+
+    <!-- ===== CONTENT ===== -->
+    <div class="container">
+
+        <div class="header">
+            <h1>Your Fitness Assessment</h1>
+            <p>Understand your body. Define your goal. Build your plan.</p>
+            <div class="gold-line"></div>
+        </div>
+
+        <!-- GOAL CARDS -->
+        <div class="goal-grid">
+            <div class="goal-card selected">
+                <div class="icon"><i class="fas fa-arrow-down"></i></div>
+                <h4>Weight Loss</h4>
+                <p>Healthy weight management.</p>
+                <span class="badge">Select</span>
+            </div>
+            <div class="goal-card">
+                <div class="icon"><i class="fas fa-arrow-up"></i></div>
+                <h4>Muscle Gain</h4>
+                <p>Build strength & performance.</p>
+                <span class="badge-light">Select</span>
+            </div>
+            <div class="goal-card">
+                <div class="icon"><i class="fas fa-minus-circle"></i></div>
+                <h4>Maintain Weight</h4>
+                <p>Healthy habits, stay active.</p>
+                <span class="badge-light">Select</span>
+            </div>
+            <div class="goal-card">
+                <div class="icon"><i class="fas fa-heart-pulse"></i></div>
+                <h4>Improve Fitness</h4>
+                <p>Endurance & overall fitness.</p>
+                <span class="badge-light">Select</span>
+            </div>
+        </div>
+
+        <!-- CALCULATORS -->
+        <div class="calc-grid">
+
+            <!-- BMI -->
+            <div class="calc-card">
+                <h3>BMI Calculator</h3>
+
+                <div class="form-group">
+                    <label>Height (cm)</label>
+                    <input type="number" value="175">
+                </div>
+
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" value="70">
+                </div>
+
+                <button class="btn-emerald">Calculate BMI</button>
+
+                <div class="result-row">
+                    <span class="bold">22.8</span>
+                    <span class="emerald">Normal Range</span>
+                </div>
+
+                <div class="bar">
+                    <div class="fill"></div>
+                </div>
+            </div>
+
+            <!-- CALORIES -->
+            <div class="calc-card">
+                <h3>Calorie Calculator</h3>
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" value="32">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+
+                        <select>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select></div>
+                </div>
+                <div class="form-group">
+                    <label>Height (cm)</label>
+                    <input type="number" value="175">
+                </div>
+
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" value="70">
+                </div>
+
+                <div class="form-group">
+                    <label>Activity Level</label>
+
+                    <select>
+                        <option>Sedentary</option>
+                        <option selected>Moderate</option>
+                        <option>Active</option>
+                    </select></div>
+                <button class="btn-emerald">Calculate Calories</button>
+                <div class="result-row">
+                    <span>BMR 1,650 kcal</span>
+                    <span class="bold">Daily 2,200 kcal</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- NEXT PAGE LINK -->
+        <div class="next-link">
+            <a href="workout.html">
+                Next: Workout & Diet <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

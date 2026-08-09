@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCoach AI — Workout & Diet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f3f0;
+            color: #1a1a1a;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #1b1b1b;
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .brand {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .navbar .brand span {
+            color: #1e7b5a;
+        }
+
+        .navbar .brand i {
+            color: #c9a86c;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-right i {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.1rem;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1e7b5a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .nav-right a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* ===== HEADER ===== */
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: #6b6b6b;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 4px;
+            background: #c9a86c;
+            border-radius: 10px;
+            margin: 12px 0 30px 0;
+        }
+
+        /* ===== TABS ===== */
+        .tab-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .tab-list a {
+            background: transparent;
+            padding: 8px 28px;
+            border-radius: 60px;
+            color: #3a3a3a;
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid #ddd;
+        }
+
+        .tab-list a.active-tab {
+            background: #1b1b1b;
+            color: #c9a86c;
+            border-color: #1b1b1b;
+        }
+
+        /* ===== WORKOUT CARD ===== */
+        .workout-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 28px 32px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-bottom: 35px;
+        }
+
+        .workout-card h3 {
+            font-weight: 600;
+        }
+
+        .workout-card h3 i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .workout-card .meta {
+            color: #777;
+            margin: 6px 0 14px;
+        }
+
+        .workout-card ul {
+            list-style: none;
+            margin: 12px 0 18px;
+        }
+
+        .workout-card ul li {
+            padding: 4px 0;
+        }
+
+        .workout-card ul li i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1e7b5a;
+            color: #1e7b5a;
+            padding: 8px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: #1e7b5a;
+            color: #fff;
+        }
+
+        /* ===== MEAL GRID ===== */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin: 18px 0;
+        }
+
+        .meal-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 20px 18px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+        }
+
+        .meal-card .icon {
+            font-size: 2rem;
+            color: #1e7b5a;
+            margin-bottom: 6px;
+        }
+
+        .meal-card h5 {
+            font-weight: 600;
+        }
+
+        .meal-card p {
+            font-size: 0.9rem;
+            color: #6b6b6b;
+        }
+
+        .meal-card .cal {
+            background: #1b1b1b;
+            color: #c9a86c;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin: 6px 0;
+        }
+
+        .meal-card .check {
+            margin-top: 8px;
+        }
+
+        .meal-card .check i {
+            font-size: 1.2rem;
+        }
+
+        .meal-card .check .done {
+            color: #1e7b5a;
+        }
+
+        .meal-card .check .pending {
+            color: #ccc;
+        }
+
+        /* ===== SUMMARY ===== */
+        .summary {
+            background: #fff;
+            border-radius: 24px;
+            padding: 18px 24px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-top: 10px;
+        }
+
+        .summary .bold {
+            font-weight: 600;
+        }
+
+        .summary .muted {
+            color: #777;
+        }
+
+        /* ===== NEXT PAGE LINK ===== */
+        .next-link {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0ddd8;
+        }
+
+        .next-link a {
+            color: #1e7b5a;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .next-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:1024px) {
+            .meal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:768px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+                order: 3;
+            }
+
+            .nav-links a {
+                padding: 4px 12px;
+                font-size: 0.8rem;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .meal-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width:480px) {
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="brand"><i class="fas fa-diamond"></i>FitCoach <span>AI</span></div>
+        <ul class="nav-links">
+            <li><a href="./dashboard.html"><i class="fas fa-grid-2"></i> Dashboard</a></li>
+            <li><a href="./Fitness.html"><i class="fas fa-clipboard-pulse"></i> Assessment</a></li>
+            <li><a href="#" class="active"><i class="fas fa-dumbbell"></i> Workout & Diet</a></li>
+            <li><a href="./Daily Tracker.html"><i class="fas fa-droplet"></i> Daily Tracker</a></li>
+            <li><a href="./Progress Coach.html"><i class="fas fa-chart-line"></i> Progress & AI</a></li>
+        </ul>
+        <div class="nav-right">
+            <i class="fas fa-bell"></i>
+            <div class="avatar">A</div>
+            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </nav>
+
+    <!-- ===== CONTENT ===== -->
+    <div class="container">
+
+        <div class="header">
+            <h1>Your Personal Plan</h1>
+            <p>A structured approach to training and nutrition.</p>
+            <div class="gold-line"></div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tab-list">
+            <a href="#" class="active-tab">Monday</a>
+            <a href="#">Tuesday</a>
+            <a href="#">Wednesday</a>
+            <a href="#">Thursday</a>
+            <a href="#">Friday</a>
+            <a href="#">Saturday</a>
+            <a href="#">Sunday</a>
+        </div>
+
+        <!-- WORKOUT -->
+        <div class="workout-card">
+            <h3><i class="fas fa-dumbbell"></i> Full Body Workout</h3>
+            <div class="meta">30 Minutes · Beginner</div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Squats</li>
+                <li><i class="fas fa-check-circle"></i> Push-ups</li>
+                <li><i class="fas fa-check-circle"></i> Lunges</li>
+                <li><i class="fas fa-check-circle"></i> Plank</li>
+            </ul>
+            <a href="#" class="btn-outline">Mark as Completed</a>
+        </div>
+
+        <!-- DIET -->
+        <h3 style="font-weight:600; margin-bottom:16px;">🍽️ Diet Plan</h3>
+        <div class="meal-grid">
+            <div class="meal-card">
+                <div class="icon"><i class="fas fa-sunrise"></i></div>
+                <h5>Breakfast</h5>
+                <p>Oatmeal + Eggs + Fruit</p>
+                <span class="cal">450 kcal</span>
+                <div class="check"><i class="fas fa-check-circle done"></i></div>
+            </div>
+            <div class="meal-card">
+                <div class="icon"><i class="fas fa-sun"></i></div>
+                <h5>Lunch</h5>
+                <p>Chicken + Rice + Veg</p>
+                <span class="cal">650 kcal</span>
+                <div class="check"><i class="fas fa-check-circle done"></i></div>
+            </div>
+            <div class="meal-card">
+                <div class="icon"><i class="fas fa-apple-alt"></i></div>
+                <h5>Snack</h5>
+                <p>Fruit + Yogurt</p>
+                <span class="cal">250 kcal</span>
+                <div class="check"><i class="fas fa-circle pending"></i></div>
+            </div>
+            <div class="meal-card">
+                <div class="icon"><i class="fas fa-moon"></i></div>
+                <h5>Dinner</h5>
+                <p>Chicken + Vegetables</p>
+                <span class="cal">550 kcal</span>
+                <div class="check"><i class="fas fa-circle pending"></i></div>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary">
+            <span class="bold">1,900 / 2,200 kcal</span>
+            <span class="muted"> (86%)</span>
+        </div>
+
+        <!-- NEXT PAGE LINK -->
+        <div class="next-link">
+            <a href="./Daily Tracker.html">
+                Next: Daily Tracker <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

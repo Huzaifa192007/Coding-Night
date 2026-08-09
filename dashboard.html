@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitCoach AI — Dashboard</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f3f0;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            background: #1b1b1b;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .brand {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .navbar .brand span {
+            color: #1e7b5a;
+        }
+
+        .navbar .brand i {
+            color: #c9a86c;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-right i {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #1e7b5a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .nav-right a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-right a:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ===== DASHBOARD CONTAINER ===== */
+        .dashboard {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            color: #6b6b6b;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .goal-badge {
+            background: #1b1b1b;
+            color: #c9a86c;
+            padding: 8px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+        }
+
+        .goal-badge i {
+            margin-right: 8px;
+        }
+
+        .gold-line {
+            width: 60px;
+            height: 4px;
+            background: #c9a86c;
+            border-radius: 10px;
+            margin: 12px 0 30px 0;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 22px 24px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-card .number {
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-card .label {
+            color: #6b6b6b;
+            margin-top: 4px;
+        }
+
+        .stat-card .gold-number {
+            color: #c9a86c;
+        }
+
+        /* ===== PROGRESS CARD ===== */
+        .progress-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px 32px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            margin-bottom: 35px;
+        }
+
+        .progress-card h3 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-item .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #ece8e3;
+            border-radius: 60px;
+            overflow: hidden;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: #1e7b5a;
+            border-radius: 60px;
+        }
+
+        .progress-bar .fill.gold {
+            background: #c9a86c;
+        }
+
+        /* ===== PLAN CARDS ===== */
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .plan-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 26px 24px;
+            box-shadow: 0 20px 40px -14px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #c9a86c;
+        }
+
+        .plan-card h4 {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .plan-card h4 i {
+            color: #1e7b5a;
+            margin-right: 10px;
+        }
+
+        .plan-card .desc {
+            color: #6b6b6b;
+        }
+
+        .plan-card .time {
+            color: #888888;
+            font-size: 0.9rem;
+            margin: 4px 0 12px 0;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1e7b5a;
+            color: #1e7b5a;
+            padding: 8px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: #1e7b5a;
+            color: #ffffff;
+        }
+
+        .next-link {
+            text-align: right;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0ddd8;
+        }
+
+        .next-link a {
+            color: #1e7b5a;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .next-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .plan-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                gap: 12px;
+                padding: 14px 20px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                width: 100%;
+                order: 3;
+            }
+
+            .nav-links a {
+                padding: 6px 14px;
+                font-size: 0.85rem;
+            }
+
+            .nav-right {
+                gap: 12px;
+            }
+
+            .dashboard {
+                padding: 24px 16px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+
+            .stat-card {
+                padding: 16px 18px;
+            }
+
+            .stat-card .number {
+                font-size: 2rem;
+            }
+
+            .plan-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-card {
+                padding: 20px;
+            }
+
+            .goal-badge {
+                padding: 6px 18px;
+                font-size: 0.9rem;
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar .brand {
+                font-size: 1.2rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================ -->
+    <!-- NAVIGATION                                                   -->
+    <!-- ============================================================ -->
+    <nav class="navbar">
+        <div class="brand">
+            <i class="fas fa-diamond"></i>FitCoach <span>AI</span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#" class="active"><i class="fas fa-grid-2"></i> Dashboard</a></li>
+            <li><a href="./Fitness.html"><i class="fas fa-clipboard-pulse"></i> Assessment</a></li>
+            <li><a href="./Workout.html"><i class="fas fa-dumbbell"></i> Workout & Diet</a></li>
+            <li><a href="./Daily Tracker.html"><i class="fas fa-droplet"></i> Daily Tracker</a></li>
+            <li><a href="./Progress Coach.html"><i class="fas fa-chart-line"></i> Progress & AI</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <i class="fas fa-bell"></i>
+            <div class="avatar">A</div>
+            <a href="#"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- DASHBOARD CONTENT                                            -->
+    <!-- ============================================================ -->
+    <div class="dashboard">
+
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div>
+                <h1>Good Morning, Alex 👋</h1>
+                <p>Ready to make progress today?</p>
+                <div class="gold-line"></div>
+            </div>
+            <div class="goal-badge">
+                <i class="fas fa-trophy"></i> Goal: Improve Fitness
+            </div>
+        </div>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number">22.8</div>
+                <div class="label">BMI · Normal</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">2,200</div>
+                <div class="label">kcal · target</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">5/8</div>
+                <div class="label">Water glasses</div>
+            </div>
+            <div class="stat-card">
+                <div class="number gold-number">🔥 7 Days</div>
+                <div class="label">Streak · keep going</div>
+            </div>
+        </div>
+
+        <!-- ===== TODAY'S PROGRESS ===== -->
+        <div class="progress-card">
+            <h3>Today's Progress</h3>
+
+            <div class="progress-item">
+                <div class="row">
+                    <span>Workout</span>
+                    <span>80%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="fill" style="width:80%;"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="row">
+                    <span>Water</span>
+                    <span>62%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="fill" style="width:62%;"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="row">
+                    <span>Meals</span>
+                    <span>66%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="fill" style="width:66%;"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="row">
+                    <span>Habits</span>
+                    <span>80%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="fill gold" style="width:80%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TODAY'S PLAN ===== -->
+        <div class="plan-grid">
+
+            <div class="plan-card">
+                <h4><i class="fas fa-dumbbell"></i> Workout</h4>
+                <div class="desc">Full Body Workout</div>
+                <div class="time">30 min</div>
+                <a href="#" class="btn-outline">Start Workout</a>
+            </div>
+
+            <div class="plan-card">
+                <h4><i class="fas fa-egg"></i> Nutrition</h4>
+                <div class="desc">Today's Meal Plan</div>
+                <div class="time">1,900 kcal</div>
+                <a href="#" class="btn-outline">View Diet</a>
+            </div>
+
+            <div class="plan-card">
+                <h4><i class="fas fa-check-circle"></i> Habits</h4>
+                <div class="desc">4 / 5 Completed</div>
+                <div class="time">keep it up</div>
+                <a href="#" class="btn-outline">View Tracker</a>
+            </div>
+
+        </div>
+
+        <div class="next-link">
+            <a href="./Fitness.html">
+                Next: Fitness Assessment <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div><!-- /.dashboard -->
+
+</body>
+
+</html>
