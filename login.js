@@ -8,7 +8,7 @@ useremail.addEventListener("change", function (event) {
     console.log("Final Email :", event.target.value)
 })
 
-let userpass = document.getElementById("loginEmail")
+let userpass = document.getElementById("loginPassword")
 userpass.addEventListener("change", function (event) {
     console.log("Final Password :", event.target.value)
 })
@@ -46,28 +46,28 @@ function remember() {
     return conditionchecked;
 }
 
-let Submit = document.getElementById("loginBtn")
+let Submit = document.getElementById("submitform")
 Submit.addEventListener("submit", function (event) {
     event.preventDefault();
 
     console.log("--------On Submit--------")
 
-    if (username.value = "") {
+    if (username.value == "") {
         alert("Please Enter Name")
         return;
     }
 
-    if (useremail.value = "") {
+    if (useremail.value == "") {
         alert("Please Enter Email")
         return;
     }
 
-    if (userpass.value = "") {
+    if (userpass.value == "") {
         alert("Please Enter pass")
         return;
     }
 
-    if (userconfirmpass.value = "") {
+    if (userconfirmpass.value == "") {
         alert("Please Enter confirm Password ")
         return;
     }
@@ -77,27 +77,27 @@ Submit.addEventListener("submit", function (event) {
         return;
     }
 
-    if (userage.value = "") {
+    if (userage.value == "") {
         alert("Please Enter Age")
         return;
     }
 
-    if (usergender.value = "") {
+    if (usergender.value == "") {
         alert("Please Enter Gender")
         return;
     }
 
-    if (userheight.value = "") {
+    if (userheight.value == "") {
         alert("Please Enter height")
         return;
     }
 
-    if (userweight.value = "") {
+    if (userweight.value == "") {
         alert("Please Enter weight")
         return;
     }
 
-    if (usergoal.value = "") {
+    if (usergoal.value == "") {
         alert("Please Enter Goal")
         return;
     }
@@ -125,7 +125,7 @@ Submit.addEventListener("submit", function (event) {
         Password: userpass.value,
         Confrim: userconfirmpass.value,
         Age : userage.value,
-        Gender: gender.value,
+        Gender: usergender.value,
         Height : userheight.value,
         Weight : userweight.value,
         Goal : usergoal.value
